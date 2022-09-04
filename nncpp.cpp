@@ -55,6 +55,13 @@ MultiLayerPerceptron::MultiLayerPerceptron(vector<int> layers, double bias, doub
 
 void MultiLayerPerceptron::setWeights(vector<vector<vector<double>>> wInit)
 {
+    for (int i = 0; i < wInit.size(); i++)
+    {
+        for (int j = 0; j < wInit[i].size(); j++)
+        {
+            network[i + 1][j].setWeights(wInit[i][j]);
+        }
+    }
 }
 
 void MultiLayerPerceptron::printWeights()
@@ -73,4 +80,17 @@ void MultiLayerPerceptron::printWeights()
         }
     }
     cout << endl;
+}
+
+vector<double> MultiLayerPerceptron::run(vector<double> x)
+{
+    values[0] = x;
+    for (int i = 1; i < network.size(); i++)
+    {
+        for (int j = 0; j < layers[i]; j++)
+        {
+            values[i][j] = network[i][j].run(values[i - 1]);
+        }
+    }
+    return values.back();
 }
